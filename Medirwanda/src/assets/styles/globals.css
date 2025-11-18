@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 1280px;
+}
+
+.gradient-bg {
+  background-image: radial-gradient(1200px 600px at 0% 0%, rgba(99,102,241,.25), transparent 40%), radial-gradient(800px 400px at 100% 0%, rgba(59,130,246,.25), transparent 40%), radial-gradient(800px 600px at 100% 100%, rgba(16,185,129,.25), transparent 40%), radial-gradient(1200px 800px at 0% 100%, rgba(236,72,153,.25), transparent 40%);
+}
+
+.glass {
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(10px);
+}
+
+@theme {
+  --color-primary: #4f46e5;
+  --radius: 12px;
+}

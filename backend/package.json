@@ -2,9 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --watch src --ext js --exec node src/app.js",
+    "start": "node src/app.js",
+    "test": "echo \"No tests\""
   },
   "keywords": [],
   "author": "",
