@@ -1,23 +1,49 @@
 {
-  "name": "backend",
+  "name": "medirwanda-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/app.js",
+  "description": "MediRwanda Healthcare Platform - Backend API",
+  "main": "src/main.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src --ext js --exec node src/app.js",
-    "start": "node src/app.js",
-    "test": "echo \"No tests\""
+    "dev": "node --watch src/main.js",
+    "dev:server": "node --watch src/server.js",
+    "start": "node src/main.js",
+    "start:prod": "NODE_ENV=production node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.js\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": [
+    "healthcare",
+    "medical",
+    "telemedicine",
+    "api"
+  ],
+  "author": "MediRwanda Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3",
-    "nodemon": "^3.1.11"
+    "nodemailer": "^7.0.10",
+    "redis": "^5.10.0",
+    "sequelize": "^6.37.7",
+    "socket.io": "^4.7.2",
+    "uuid": "^13.0.0",
+    "winston": "^3.11.0"
   }
 }

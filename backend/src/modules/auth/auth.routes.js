@@ -1,35 +1,77 @@
-const { Router } = require('express')
-const { pool } = require('../../database/data-source')
+import express from 'express';
+import { register, login } from './auth.service.js';
+import { authenticateToken } from '../../middleware/auth.middleware.js';
 
-const router = Router()
+const router = express.Router();
 
-router.post('/login', async (req, res) => {
-  const { nid, name } = req.body || {}
-  if (!nid) return res.status(400).json({ error: 'nid_required' })
+// Register
+router.post('/register', async (req, res, next) => {
   try {
-    const [rows] = await pool.query('SELECT id, nid, name FROM patients WHERE nid = ? LIMIT 1', [nid])
-    let row = Array.isArray(rows) && rows.length ? rows[0] : null
-    if (!row) {
-      await pool.query('INSERT INTO patients (nid, name) VALUES (?, ?)', [nid, name || 'User'])
-      const [created] = await pool.query('SELECT id, nid, name FROM patients WHERE nid = ? LIMIT 1', [nid])
-      row = Array.isArray(created) && created.length ? created[0] : null
+    const { firstName, lastName, nationalId, email, phone, dateOfBirth, gender, password, role } = req.body;
+
+    if (!firstName || !lastName || !nationalId || !email || !phone || !dateOfBirth || !gender || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: firstName, lastName, nationalId, email, phone, dateOfBirth, gender, password',
+      });
     }
-    return res.json({ user: { id: row.id, nid: row.nid, name: row.name, role: 'patient' } })
-  } catch {
-    return res.status(500).json({ error: 'db_error' })
-  }
-})
 
-router.get('/me', async (req, res) => {
-  const nid = String(req.query.nid || '')
-  if (!nid) return res.json(null)
+    const result = await register({
+      firstName,
+      lastName,
+      nationalId,
+      email,
+      phone,
+      dateOfBirth,
+      gender,
+      password,
+      role: role || 'PATIENT',
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Login
+router.post('/login', async (req, res, next) => {
   try {
-    const [rows] = await pool.query('SELECT id, nid, name FROM patients WHERE nid = ? LIMIT 1', [nid])
-    const row = Array.isArray(rows) && rows.length ? rows[0] : null
-    return res.json(row ? { id: row.id, nid: row.nid, name: row.name, role: 'patient' } : null)
-  } catch {
-    return res.json(null)
-  }
-})
+    const { email, password } = req.body;
 
-module.exports = router
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required',
+      });
+    }
+
+    const result = await login(email, password);
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get current user
+router.get('/me', authenticateToken, async (req, res, next) => {
+  try {
+    res.json({
+      success: true,
+      data: req.user,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default router;
